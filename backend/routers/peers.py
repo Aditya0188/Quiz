@@ -261,28 +261,37 @@ def get_peer_attempt_details(
         except Exception:
             responses = {}
 
-    questions_order = []
+    questions_order_ints = []
     if session.questions_order:
         try:
-            questions_order = json.loads(session.questions_order)
+            raw_order = json.loads(session.questions_order)
+            questions_order_ints = [int(x) for x in raw_order if str(x).isdigit()]
         except Exception:
             pass
 
-    if not questions_order and responses:
-        questions_order = [int(k) for k in responses.keys() if str(k).isdigit()]
+    if not questions_order_ints and responses:
+        questions_order_ints = [int(k) for k in responses.keys() if str(k).isdigit()]
 
-    questions = db.query(Question).filter(Question.id.in_(questions_order)).all()
+    # Query questions using integer IDs
+    questions = db.query(Question).filter(Question.id.in_(questions_order_ints)).all()
     q_map = {q.id: q for q in questions}
 
     detailed_questions = []
-    for qid in questions_order:
+    for qid in questions_order_ints:
         q = q_map.get(qid)
         if not q:
             continue
         res = responses.get(str(qid), {})
-        student_ans = res.get("answer")
-        status = res.get("status", "unanswered")
-        marks_awarded = res.get("marks_awarded", 0.0)
+        if not isinstance(res, dict):
+            student_ans = res
+            status = "answered" if res is not None else "unanswered"
+            marks_awarded = 0.0
+        else:
+            student_ans = res.get("user_answer") if "user_answer" in res else res.get("answer")
+            status = res.get("status", "unanswered")
+            marks_awarded = res.get("marks_awarded", 0.0)
+
+        is_attempted = (student_ans is not None and str(student_ans).strip() != "")
 
         options = None
         if q.options:
@@ -302,6 +311,7 @@ def get_peer_attempt_details(
             "options": options,
             "correct_answer": q.correct_answer,
             "student_answer": student_ans,
+            "is_attempted": is_attempted,
             "status": status,
             "marks_awarded": marks_awarded,
             "explanation": q.explanation

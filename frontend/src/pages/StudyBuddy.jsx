@@ -24,6 +24,7 @@ const StudyBuddy = () => {
   const [inspectModalOpen, setInspectModalOpen] = useState(false);
   const [inspectLoading, setInspectLoading] = useState(false);
   const [inspectedAttempt, setInspectedAttempt] = useState(null);
+  const [attemptFilter, setAttemptFilter] = useState('all');
 
   // Load initial peers & activity
   const fetchData = async (keepSelection = false) => {
@@ -90,6 +91,7 @@ const StudyBuddy = () => {
   const handleInspectAttempt = async (sessionId) => {
     setInspectModalOpen(true);
     setInspectLoading(true);
+    setAttemptFilter('all');
     try {
       const res = await client.get(`/peers/attempt/${sessionId}`);
       setInspectedAttempt(res.data);
@@ -477,7 +479,7 @@ const StudyBuddy = () => {
               ) : (
                 <>
                   {/* Summary Bar */}
-                  <div className="grid grid-cols-4 gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center">
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center">
                     <div>
                       <span className="block text-xl font-black text-primary">{inspectedAttempt?.score}M</span>
                       <span className="text-[10px] uppercase font-bold text-slate-400">Score</span>
@@ -491,76 +493,254 @@ const StudyBuddy = () => {
                       <span className="text-[10px] uppercase font-bold text-slate-400">Wrong</span>
                     </div>
                     <div>
+                      <span className="block text-xl font-black text-amber-600">{inspectedAttempt?.unanswered_count}</span>
+                      <span className="text-[10px] uppercase font-bold text-slate-400">Skipped</span>
+                    </div>
+                    <div className="col-span-2 sm:col-span-1">
                       <span className="block text-xl font-black text-slate-700">{inspectedAttempt?.percentage}%</span>
-                      <span className="text-[10px] uppercase font-bold text-slate-400">Marks %</span>
+                      <span className="text-[10px] uppercase font-bold text-slate-400">Percentage</span>
                     </div>
                   </div>
 
-                  {/* Question-by-Question breakdown */}
-                  <div className="space-y-4">
-                    {inspectedAttempt?.questions?.map((q, idx) => {
-                      const isCorrect = q.status === 'correct';
-                      const isWrong = q.status === 'wrong';
-                      return (
-                        <div 
-                          key={q.id}
-                          className={`p-5 rounded-2xl border-2 transition-all ${
-                            isCorrect 
-                              ? 'border-emerald-200 bg-emerald-50/20' 
-                              : isWrong 
-                              ? 'border-red-200 bg-red-50/20' 
-                              : 'border-slate-200 bg-slate-50/40'
+                  {/* Filter Chips */}
+                  {(() => {
+                    const qList = inspectedAttempt?.questions || [];
+                    const attemptedCount = qList.filter(q => q.is_attempted).length;
+                    const correctCount = qList.filter(q => q.status === 'correct').length;
+                    const wrongCount = qList.filter(q => q.status === 'wrong').length;
+                    const skippedCount = qList.filter(q => !q.is_attempted).length;
+
+                    return (
+                      <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
+                        <span className="text-xs font-bold text-slate-400 mr-1">Filter questions:</span>
+                        <button
+                          onClick={() => setAttemptFilter('all')}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            attemptFilter === 'all'
+                              ? 'bg-slate-900 text-white shadow-xs'
+                              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                           }`}
                         >
-                          <div className="flex justify-between items-center mb-2.5">
-                            <div className="flex items-center space-x-2">
-                              <span className="font-extrabold text-sm text-slate-800">Q.{idx + 1}</span>
-                              <span className="text-xs px-2 py-0.5 rounded bg-slate-100 font-bold text-slate-600">
-                                {q.subject} • {q.marks}M
-                              </span>
-                            </div>
-                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-black uppercase ${
+                          All ({qList.length})
+                        </button>
+                        <button
+                          onClick={() => setAttemptFilter('attempted')}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            attemptFilter === 'attempted'
+                              ? 'bg-primary text-white shadow-xs'
+                              : 'bg-primary/10 text-primary hover:bg-primary/20'
+                          }`}
+                        >
+                          Buddy Attempted ({attemptedCount})
+                        </button>
+                        <button
+                          onClick={() => setAttemptFilter('correct')}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            attemptFilter === 'correct'
+                              ? 'bg-emerald-600 text-white shadow-xs'
+                              : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                          }`}
+                        >
+                          Correct ({correctCount})
+                        </button>
+                        <button
+                          onClick={() => setAttemptFilter('wrong')}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            attemptFilter === 'wrong'
+                              ? 'bg-red-600 text-white shadow-xs'
+                              : 'bg-red-50 text-red-700 hover:bg-red-100'
+                          }`}
+                        >
+                          Wrong ({wrongCount})
+                        </button>
+                        <button
+                          onClick={() => setAttemptFilter('skipped')}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            attemptFilter === 'skipped'
+                              ? 'bg-amber-600 text-white shadow-xs'
+                              : 'bg-amber-50 text-amber-700 hover:bg-amber-100'
+                          }`}
+                        >
+                          Skipped ({skippedCount})
+                        </button>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Question-by-Question breakdown */}
+                  <div className="space-y-5">
+                    {(() => {
+                      const qList = inspectedAttempt?.questions || [];
+                      const filtered = qList.filter(q => {
+                        if (attemptFilter === 'attempted') return q.is_attempted;
+                        if (attemptFilter === 'correct') return q.status === 'correct';
+                        if (attemptFilter === 'wrong') return q.status === 'wrong';
+                        if (attemptFilter === 'skipped') return !q.is_attempted;
+                        return true;
+                      });
+
+                      if (filtered.length === 0) {
+                        return (
+                          <div className="text-center py-10 bg-slate-50 rounded-2xl border border-slate-200">
+                            <p className="text-xs font-bold text-slate-500">No questions found in this category.</p>
+                          </div>
+                        );
+                      }
+
+                      return filtered.map((q, idx) => {
+                        const isCorrect = q.status === 'correct';
+                        const isWrong = q.status === 'wrong';
+                        const isAttempted = q.is_attempted;
+
+                        return (
+                          <div 
+                            key={q.id}
+                            className={`p-5 rounded-2xl border-2 transition-all ${
                               isCorrect 
-                                ? 'bg-emerald-100 text-emerald-800' 
+                                ? 'border-emerald-300 bg-emerald-50/20' 
                                 : isWrong 
-                                ? 'bg-red-100 text-red-800' 
-                                : 'bg-slate-200 text-slate-600'
-                            }`}>
-                              {q.status}
-                            </span>
-                          </div>
+                                ? 'border-red-300 bg-red-50/20' 
+                                : 'border-slate-200 bg-slate-50/30'
+                            }`}
+                          >
+                            <div className="flex flex-wrap justify-between items-center gap-2 mb-3">
+                              <div className="flex items-center space-x-2">
+                                <span className="font-black text-sm text-slate-900">Q.{idx + 1}</span>
+                                <span className="text-xs px-2.5 py-0.5 rounded-md bg-slate-100 font-bold text-slate-700">
+                                  {q.subject}
+                                </span>
+                                <span className="text-xs px-2 py-0.5 rounded-md bg-slate-200/70 font-black text-slate-600">
+                                  {q.marks} Mark{q.marks > 1 ? 's' : ''}
+                                </span>
+                                <span className="text-[11px] px-2 py-0.5 rounded-md bg-primary/10 font-bold text-primary">
+                                  {q.question_type}
+                                </span>
+                              </div>
 
-                          {/* Question Text */}
-                          <div className="text-sm font-medium text-slate-800 mb-3 whitespace-pre-line leading-relaxed">
-                            {parseLaTeX(q.question_text)}
-                          </div>
-
-                          {/* Answers comparison */}
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-bold p-3 bg-white rounded-xl border border-slate-200 mb-3">
-                            <div className="flex items-center space-x-1.5">
-                              <span className="text-slate-400">Candidate Answer:</span>
-                              <span className={isCorrect ? 'text-emerald-700' : 'text-red-600'}>
-                                {q.student_answer ? String(q.student_answer) : '(Not Answered)'}
-                              </span>
-                            </div>
-                            <div className="flex items-center space-x-1.5">
-                              <span className="text-slate-400">Official Correct Answer:</span>
-                              <span className="text-emerald-700">{q.correct_answer}</span>
-                            </div>
-                          </div>
-
-                          {/* Step-by-Step Explanation */}
-                          {q.explanation && (
-                            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs text-slate-700">
-                              <span className="font-bold text-slate-900 block mb-1">Detailed Explanation:</span>
-                              <div className="leading-relaxed whitespace-pre-line">
-                                {parseLaTeX(q.explanation)}
+                              <div>
+                                {isCorrect ? (
+                                  <span className="px-2.5 py-1 rounded-full text-xs font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
+                                    <CheckCircle2 className="w-3.5 h-3.5" />
+                                    <span>Correct (+{q.marks_awarded}M)</span>
+                                  </span>
+                                ) : isWrong ? (
+                                  <span className="px-2.5 py-1 rounded-full text-xs font-black uppercase bg-red-100 text-red-800 border border-red-300 flex items-center gap-1">
+                                    <XCircle className="w-3.5 h-3.5" />
+                                    <span>Wrong ({q.marks_awarded}M)</span>
+                                  </span>
+                                ) : (
+                                  <span className="px-2.5 py-1 rounded-full text-xs font-bold uppercase bg-slate-200 text-slate-700">
+                                    Not Attempted (0M)
+                                  </span>
+                                )}
                               </div>
                             </div>
-                          )}
-                        </div>
-                      );
-                    })}
+
+                            {/* Question Text */}
+                            <div className="text-sm font-medium text-slate-800 mb-4 whitespace-pre-line leading-relaxed">
+                              {parseLaTeX(q.question_text)}
+                            </div>
+
+                            {/* MCQ Options with Buddy Choice Highlighted */}
+                            {q.options && typeof q.options === 'object' && (
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-4">
+                                {Object.entries(q.options).map(([optKey, optVal]) => {
+                                  const buddyAnswerNormalized = String(q.student_answer || '').trim().toUpperCase();
+                                  const correctAnswerNormalized = String(q.correct_answer || '').trim().toUpperCase();
+                                  const isBuddyChoice = buddyAnswerNormalized === optKey.toUpperCase();
+                                  const isCorrectChoice = correctAnswerNormalized === optKey.toUpperCase();
+
+                                  let cardStyle = "border-slate-200 bg-white text-slate-700";
+                                  let tag = null;
+
+                                  if (isBuddyChoice && isCorrectChoice) {
+                                    cardStyle = "border-2 border-emerald-500 bg-emerald-50 text-emerald-950 shadow-xs";
+                                    tag = (
+                                      <span className="text-[11px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">
+                                        ✓ Buddy's Choice (Correct)
+                                      </span>
+                                    );
+                                  } else if (isBuddyChoice && !isCorrectChoice) {
+                                    cardStyle = "border-2 border-red-500 bg-red-50 text-red-950 shadow-xs";
+                                    tag = (
+                                      <span className="text-[11px] font-black text-red-700 bg-red-100 px-2 py-0.5 rounded-md">
+                                        ✗ Buddy's Choice (Incorrect)
+                                      </span>
+                                    );
+                                  } else if (isCorrectChoice) {
+                                    cardStyle = "border-2 border-emerald-400 bg-emerald-50/60 text-emerald-900 border-dashed";
+                                    tag = (
+                                      <span className="text-[11px] font-black text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-md">
+                                        ✓ Correct Option
+                                      </span>
+                                    );
+                                  }
+
+                                  return (
+                                    <div 
+                                      key={optKey} 
+                                      className={`p-3 rounded-xl border flex flex-col justify-between text-xs transition-all ${cardStyle}`}
+                                    >
+                                      <div className="flex items-start space-x-2">
+                                        <span className={`font-black px-2 py-0.5 rounded text-xs shrink-0 ${
+                                          isBuddyChoice ? (isCorrectChoice ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white') : isCorrectChoice ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-800'
+                                        }`}>
+                                          {optKey}
+                                        </span>
+                                        <span className="leading-snug pt-0.5">{parseLaTeX(optVal)}</span>
+                                      </div>
+                                      {tag && <div className="mt-2 text-right">{tag}</div>}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+
+                            {/* NAT / Numeric comparison */}
+                            {(!q.options || typeof q.options !== 'object') && (
+                              <div className="p-3.5 rounded-xl bg-white border border-slate-200 mb-4 text-xs space-y-2">
+                                <div className="flex justify-between items-center">
+                                  <span className="text-slate-500 font-bold">Buddy's Entered Value:</span>
+                                  <span className={`font-black ${
+                                    isCorrect ? 'text-emerald-700' : isAttempted ? 'text-red-600' : 'text-slate-400'
+                                  }`}>
+                                    {isAttempted ? String(q.student_answer) : '(Skipped / Not Attempted)'}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between items-center border-t border-slate-100 pt-2">
+                                  <span className="text-slate-500 font-bold">Official Correct Answer:</span>
+                                  <span className="text-emerald-700 font-black">{q.correct_answer}</span>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Answers Comparison Summary Box */}
+                            <div className="flex flex-wrap items-center justify-between text-xs p-3 bg-white/80 rounded-xl border border-slate-200 mb-3 gap-2">
+                              <div className="flex items-center space-x-2">
+                                <span className="text-slate-400 font-bold">Buddy Answer:</span>
+                                <span className={`font-black ${isCorrect ? 'text-emerald-700' : isAttempted ? 'text-red-600' : 'text-slate-400'}`}>
+                                  {isAttempted ? String(q.student_answer) : 'Not Answered'}
+                                </span>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <span className="text-slate-400 font-bold">Correct Key:</span>
+                                <span className="text-emerald-700 font-black">{q.correct_answer}</span>
+                              </div>
+                            </div>
+
+                            {/* Step-by-Step Explanation */}
+                            {q.explanation && (
+                              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs text-slate-700">
+                                <span className="font-black text-slate-900 block mb-1">Detailed Explanation & Solution:</span>
+                                <div className="leading-relaxed whitespace-pre-line">
+                                  {parseLaTeX(q.explanation)}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      });
+                    })()}
                   </div>
                 </>
               )}

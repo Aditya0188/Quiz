@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: gate-cs-master
+    env: docker
+    plan: free
+    dockerfilePath: Dockerfile
+    healthCheckPath: /api/questions/stats
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+        # Paste your free Neon.tech or Supabase PostgreSQL connection string here:
+        # e.g., postgresql://user:password@ep-cool-forest.us-east-2.aws.neon.tech/neondb?sslmode=require
+      - key: SECRET_KEY
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false

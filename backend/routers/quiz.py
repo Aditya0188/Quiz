@@ -19,8 +19,9 @@ class QuizConfig(BaseModel):
     num_questions: int = 10
     time_limit: int = 30
     question_types: List[str] = ["MCQ", "MSQ", "NAT"]
-    year_range: Optional[List[int]] = [1991, 2025]
+    year_range: Optional[List[int]] = [1991, 2026]
     include_ai: bool = False
+    source: Optional[str] = "all"
 
 class SubmitAnswers(BaseModel):
     responses: Dict[str, dict]

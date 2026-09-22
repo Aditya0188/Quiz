@@ -34,12 +34,13 @@ def startup_db_check():
     db = SessionLocal()
     try:
         count = db.query(Question).count()
-        if count == 0:
-            print("[Startup] Database is empty. Auto-seeding 693 questions...")
-            seed_file = os.path.join(os.path.dirname(__file__), "seed_data", "questions_full_693.json")
-            if os.path.exists(seed_file):
-                with open(seed_file, "r", encoding="utf-8") as f:
-                    q_list = json.load(f)
+        seed_file = os.path.join(os.path.dirname(__file__), "seed_data", "questions_full_693.json")
+        if os.path.exists(seed_file):
+            with open(seed_file, "r", encoding="utf-8") as f:
+                q_list = json.load(f)
+
+            if count == 0:
+                print(f"[Startup] Database is empty. Auto-seeding {len(q_list)} questions...")
                 new_objs = []
                 for q in q_list:
                     new_objs.append(Question(
@@ -60,19 +61,38 @@ def startup_db_check():
                     ))
                 db.bulk_save_objects(new_objs)
                 db.commit()
-                print(f"[Startup] Successfully seeded {len(new_objs)} questions into the database!")
+                print(f"[Startup] Successfully seeded {len(new_objs)} questions!")
             else:
-                print(f"[Startup] Warning: Seed file not found at {seed_file}")
-        else:
-            # If DB already has questions, check if any legacy question type mismatches exist (e.g. Q644 as NAT)
-            sample_legacy = db.query(Question).filter(Question.id == 644, Question.question_type == 'NAT').first()
-            if sample_legacy:
-                print("[Startup] Detected legacy question types. Syncing corrected questions from seed...")
-                seed_file = os.path.join(os.path.dirname(__file__), "seed_data", "questions_full_693.json")
-                if os.path.exists(seed_file):
-                    with open(seed_file, "r", encoding="utf-8") as f:
-                        q_list = json.load(f)
-                    for q in q_list:
+                # If database has fewer questions than the expanded seed file, add missing questions
+                existing_ids = {qid[0] for qid in db.query(Question.id).all()}
+                missing_objs = []
+                for q in q_list:
+                    if q.get("id") not in existing_ids:
+                        missing_objs.append(Question(
+                            id=q.get("id"),
+                            subject=q.get("subject"),
+                            topic=q.get("topic"),
+                            year=q.get("year"),
+                            set_number=q.get("set_number"),
+                            question_type=q.get("question_type"),
+                            difficulty=q.get("difficulty"),
+                            marks=q.get("marks"),
+                            question_text=q.get("question_text"),
+                            options=json.dumps(q.get("options")) if q.get("options") else None,
+                            correct_answer=q.get("correct_answer"),
+                            nat_tolerance=q.get("nat_tolerance", 0.0),
+                            explanation=q.get("explanation"),
+                            is_pyq=q.get("is_pyq", True)
+                        ))
+                if missing_objs:
+                    db.bulk_save_objects(missing_objs)
+                    db.commit()
+                    print(f"[Startup] Successfully added {len(missing_objs)} practice expansion questions!")
+
+                # Check legacy question 644 if type was NAT
+                sample_legacy = db.query(Question).filter(Question.id == 644, Question.question_type == 'NAT').first()
+                if sample_legacy:
+                    for q in q_list[:693]:
                         db.query(Question).filter(Question.id == q.get("id")).update({
                             Question.question_type: q.get("question_type"),
                             Question.options: json.dumps(q.get("options")) if q.get("options") else None,
@@ -81,9 +101,12 @@ def startup_db_check():
                             Question.explanation: q.get("explanation")
                         })
                     db.commit()
-                    print("[Startup] Successfully synced all updated question types and options!")
-            else:
-                print(f"[Startup] Database verified with {count} questions.")
+                    print("[Startup] Synced updated question types!")
+
+                total_now = db.query(Question).count()
+                print(f"[Startup] Database verified with {total_now} total questions.")
+        else:
+            print(f"[Startup] Warning: Seed file not found at {seed_file}")
     except Exception as e:
         print(f"[Startup] Error checking/seeding database: {e}")
     finally:

@@ -173,6 +173,13 @@ def generate_quiz(db: Session, user_id: int, config: dict):
     if question_types and len(question_types) > 0:
         query = query.filter(Question.question_type.in_(question_types))
 
+    # Source filter (All vs PYQ Only vs Practice Only)
+    source = config.get("source", "all")
+    if source in ["pyqs", "pyq_only"]:
+        query = query.filter(Question.is_pyq == True)
+    elif source in ["practice", "practice_only"]:
+        query = query.filter(Question.is_pyq == False)
+
     # Year range filter
     if year_range:
         query = query.filter(Question.year >= year_range[0], Question.year <= year_range[1])
@@ -186,8 +193,11 @@ def generate_quiz(db: Session, user_id: int, config: dict):
         if not is_mix_or_all and normalized_subjects:
             fallback_query = fallback_query.filter(Question.subject.in_(normalized_subjects))
         if expanded_topics:
-            # Topic filter remains strictly enforced!
             fallback_query = fallback_query.filter(Question.topic.in_(expanded_topics))
+        if source in ["pyqs", "pyq_only"]:
+            fallback_query = fallback_query.filter(Question.is_pyq == True)
+        elif source in ["practice", "practice_only"]:
+            fallback_query = fallback_query.filter(Question.is_pyq == False)
         if year_range:
             fallback_query = fallback_query.filter(Question.year >= year_range[0], Question.year <= year_range[1])
         all_questions = fallback_query.all()
@@ -199,6 +209,10 @@ def generate_quiz(db: Session, user_id: int, config: dict):
             relaxed_query = relaxed_query.filter(Question.subject.in_(normalized_subjects))
         if expanded_topics:
             relaxed_query = relaxed_query.filter(Question.topic.in_(expanded_topics))
+        if source in ["pyqs", "pyq_only"]:
+            relaxed_query = relaxed_query.filter(Question.is_pyq == True)
+        elif source in ["practice", "practice_only"]:
+            relaxed_query = relaxed_query.filter(Question.is_pyq == False)
         all_questions = relaxed_query.all()
 
     if not all_questions:

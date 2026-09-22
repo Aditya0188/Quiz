@@ -1,9 +1,10 @@
 import json
-from typing import Optional
+from typing import Optional, List
 from collections import defaultdict
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func
+from pydantic import BaseModel
 from database import get_db
 from models.question import Question
 from services.quiz_service import normalize_subject
@@ -272,4 +273,53 @@ def paper_analysis_subject_trends(subject: Optional[str] = None, db: Session = D
         "subject": subject or "All Subjects",
         "total_topics": len(results),
         "topics": results
+    }
+
+
+class PracticeGenerateRequest(BaseModel):
+    subject: str
+    topic: Optional[str] = None
+    count: int = 5
+    difficulty: Optional[str] = "mixed"
+
+
+@router.post("/api/questions/generate-practice")
+def generate_practice_questions_endpoint(
+    req: PracticeGenerateRequest,
+    db: Session = Depends(get_db)
+):
+    """Dynamically generates and adds fresh, non-repetitive practice questions for the chosen subject."""
+    import random
+    from services.ai_service import generate_similar_questions
+
+    norm_subj = normalize_subject(req.subject)
+    query = db.query(Question).filter(Question.subject == norm_subj)
+    if req.topic:
+        query = query.filter(Question.topic == req.topic)
+
+    existing = query.limit(20).all()
+    if not existing:
+        query = db.query(Question).filter(Question.subject == norm_subj)
+        existing = query.limit(20).all()
+
+    if not existing:
+        raise HTTPException(status_code=404, detail="No base questions found for this subject.")
+
+    count_to_make = min(max(1, req.count), 10)
+    created = []
+    sampled = random.sample(existing, min(len(existing), count_to_make))
+
+    for proto in sampled:
+        new_qs = generate_similar_questions(proto, 1)
+        for nq in new_qs:
+            db.add(nq)
+            created.append(nq)
+
+    if created:
+        db.commit()
+
+    return {
+        "message": f"Successfully generated and added {len(created)} fresh practice questions for {norm_subj}!",
+        "count": len(created),
+        "total_in_db": db.query(Question).count()
     }

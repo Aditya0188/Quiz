@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import client from '../api/client';
 import { SUBJECTS } from '../utils/constants';
-import { Settings, Play, Info, Loader2, Sparkles, Clock, CheckCircle2, BookOpen } from 'lucide-react';
+import { Settings, Play, Info, Loader2, Sparkles, Clock, CheckCircle2, BookOpen, Database, Award } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const QuizConfig = () => {
@@ -29,6 +29,7 @@ const QuizConfig = () => {
     difficulty: 'mixed',
     timeLimit: 30, // in minutes
     questionTypes: ['MCQ', 'MSQ', 'NAT'],
+    source: 'all', // 'all' | 'pyqs' | 'practice'
   });
 
   const [customTimeInput, setCustomTimeInput] = useState('30');
@@ -133,7 +134,8 @@ const QuizConfig = () => {
         time_limit: finalTime,
         question_types: config.questionTypes,
         year_range: yearRange,
-        include_ai: false
+        include_ai: false,
+        source: config.source || 'all'
       };
 
       const res = await client.post('/quiz/start', payload);
@@ -357,10 +359,71 @@ const QuizConfig = () => {
             </div>
           </div>
 
-          {/* 4. Difficulty Selection */}
+          {/* 4. Question Source Bank (PYQs vs Practice Bank vs All) */}
+          <div className="border-t border-slate-100 pt-6">
+            <div className="flex justify-between items-center mb-3">
+              <label className="text-sm font-bold text-slate-800 flex items-center">
+                <Database className="w-4 h-4 mr-1.5 text-primary" />
+                4. Question Source Bank
+              </label>
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                1,062+ Questions Available
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                {
+                  value: 'all',
+                  label: '🌟 Complete Question Bank',
+                  sub: '1,062+ Qs',
+                  desc: 'All official GATE PYQs (1991–2026) + Curated Practice questions'
+                },
+                {
+                  value: 'pyqs',
+                  label: '🏛️ Official GATE PYQs Only',
+                  sub: '693 Qs',
+                  desc: 'Authentic previous years questions from 1991 to 2026'
+                },
+                {
+                  value: 'practice',
+                  label: '💡 Practice & Mock Bank',
+                  sub: '369+ Qs',
+                  desc: 'Standard GATE-level benchmark questions for high-yield practice'
+                }
+              ].map(src => {
+                const isActive = config.source === src.value;
+                return (
+                  <button
+                    key={src.value}
+                    type="button"
+                    onClick={() => setConfig({ ...config, source: src.value })}
+                    className={`p-3.5 rounded-xl text-left border-2 transition-all flex flex-col justify-between ${
+                      isActive
+                        ? 'border-primary bg-primary/5 shadow-sm ring-1 ring-primary'
+                        : 'border-slate-200 hover:border-slate-300 bg-white'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-sm text-slate-800">{src.label}</span>
+                        <span className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded ${
+                          isActive ? 'bg-primary text-white' : 'bg-slate-100 text-slate-600'
+                        }`}>
+                          {src.sub}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">{src.desc}</p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 5. Difficulty Selection */}
           <div className="border-t border-slate-100 pt-6">
             <label className="block text-sm font-bold text-slate-800 mb-3">
-              4. Difficulty Level
+              5. Difficulty Level
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
@@ -385,10 +448,10 @@ const QuizConfig = () => {
             </div>
           </div>
 
-          {/* 5. Question Types Selection */}
+          {/* 6. Question Types Selection */}
           <div className="border-t border-slate-100 pt-6">
             <label className="block text-sm font-bold text-slate-800 mb-3">
-              5. Question Types (GATE Format)
+              6. Question Types (GATE Format)
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[

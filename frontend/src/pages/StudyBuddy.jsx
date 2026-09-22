@@ -5,7 +5,7 @@ import { parseLaTeX, formatDate } from '../utils/helpers';
 import { 
   Users, User, Trophy, Target, Clock, TrendingUp, 
   CheckCircle2, XCircle, ArrowRight, Eye, X, BookOpen, 
-  Flame, Award, Sparkles, RefreshCw, Loader2 
+  Flame, Award, Sparkles, RefreshCw, Loader2, Trash2 
 } from 'lucide-react';
 import { 
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, 
@@ -26,33 +26,49 @@ const StudyBuddy = () => {
   const [inspectedAttempt, setInspectedAttempt] = useState(null);
 
   // Load initial peers & activity
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [peersRes, feedRes] = await Promise.all([
-          client.get('/peers/list').catch(() => ({ data: [] })),
-          client.get('/peers/feed').catch(() => ({ data: [] }))
-        ]);
+  const fetchData = async (keepSelection = false) => {
+    try {
+      const [peersRes, feedRes] = await Promise.all([
+        client.get('/peers/list').catch(() => ({ data: [] })),
+        client.get('/peers/feed').catch(() => ({ data: [] }))
+      ]);
 
-        const peers = peersRes.data || [];
-        setPeersList(peers);
-        setActivityFeed(feedRes.data || []);
+      const peers = peersRes.data || [];
+      setPeersList(peers);
+      setActivityFeed(feedRes.data || []);
 
+      if (!keepSelection) {
         // Pick default buddy (first peer that is not self)
         const otherPeer = peers.find(p => !p.is_self);
-        if (otherPeer) {
-          setSelectedBuddyId(otherPeer.id);
-        }
-      } catch (err) {
-        console.error('Failed to load study buddy data', err);
-        toast.error('Could not load peer data');
-      } finally {
-        setLoading(false);
+        setSelectedBuddyId(otherPeer ? otherPeer.id : null);
       }
-    };
+    } catch (err) {
+      console.error('Failed to load study buddy data', err);
+      toast.error('Could not load peer data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
+
+  const handleDeletePeer = async (peerId) => {
+    const peer = peersList.find(p => p.id === peerId);
+    if (!window.confirm(`Are you sure you want to permanently delete test account "${peer?.name || 'User'}" and all their test data?`)) {
+      return;
+    }
+    try {
+      await client.delete(`/peers/user/${peerId}`);
+      toast.success(`Removed test account: ${peer?.name}`);
+      setSelectedBuddyId(null);
+      await fetchData(false);
+    } catch (err) {
+      console.error('Failed to delete peer', err);
+      toast.error(err.response?.data?.detail || 'Failed to remove user');
+    }
+  };
 
   // Fetch comparison whenever selectedBuddyId changes
   useEffect(() => {
@@ -137,20 +153,32 @@ const StudyBuddy = () => {
               <User className="w-4 h-4 text-emerald-400" />
               <span>Comparing with:</span>
             </div>
-            <select
-              value={selectedBuddyId || ''}
-              onChange={(e) => setSelectedBuddyId(Number(e.target.value))}
-              className="bg-white text-slate-900 font-extrabold text-xs sm:text-sm px-3.5 py-2 rounded-xl border-2 border-white/40 focus:ring-2 focus:ring-primary outline-none cursor-pointer shadow-sm"
-            >
-              {peersList.filter(p => !p.is_self).map(p => (
-                <option key={p.id} value={p.id}>
-                  {p.name} ({p.total_quizzes} Quizzes • {p.accuracy_rate}% Acc)
-                </option>
-              ))}
-              {peersList.filter(p => !p.is_self).length === 0 && (
-                <option value="">No other peer registered yet</option>
+            <div className="flex items-center gap-2">
+              <select
+                value={selectedBuddyId || ''}
+                onChange={(e) => setSelectedBuddyId(Number(e.target.value) || null)}
+                className="bg-white text-slate-900 font-extrabold text-xs sm:text-sm px-3.5 py-2 rounded-xl border-2 border-white/40 focus:ring-2 focus:ring-primary outline-none cursor-pointer shadow-sm"
+              >
+                {peersList.filter(p => !p.is_self).map(p => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} ({p.total_quizzes} Quizzes • {p.accuracy_rate}% Acc)
+                  </option>
+                ))}
+                {peersList.filter(p => !p.is_self).length === 0 && (
+                  <option value="">No other peer registered yet</option>
+                )}
+              </select>
+              {selectedBuddyId && (
+                <button
+                  onClick={() => handleDeletePeer(selectedBuddyId)}
+                  title="Delete this test account"
+                  className="px-2.5 py-2 rounded-xl bg-red-500/20 hover:bg-red-600 text-red-200 hover:text-white transition-all border border-red-400/30 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Remove</span>
+                </button>
               )}
-            </select>
+            </div>
           </div>
         </div>
       </div>

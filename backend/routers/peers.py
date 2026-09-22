@@ -324,3 +324,26 @@ def get_peer_attempt_details(
         "completed_at": session.completed_at.isoformat() if session.completed_at else None,
         "questions": detailed_questions
     }
+
+
+@router.delete("/user/{user_id}")
+def delete_peer_user(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Delete a test or unwanted peer account and their quiz sessions."""
+    if user_id == current_user.id:
+        raise HTTPException(status_code=400, detail="Cannot delete your own active account from here.")
+
+    target = db.query(User).filter(User.id == user_id).first()
+    if not target:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    target_name = target.name
+    # Delete associated quiz sessions
+    db.query(QuizSession).filter(QuizSession.user_id == user_id).delete()
+    db.delete(target)
+    db.commit()
+
+    return {"message": f"User '{target_name}' and all associated test data deleted successfully."}

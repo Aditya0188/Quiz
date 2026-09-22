@@ -64,7 +64,26 @@ def startup_db_check():
             else:
                 print(f"[Startup] Warning: Seed file not found at {seed_file}")
         else:
-            print(f"[Startup] Database already initialized with {count} questions.")
+            # If DB already has questions, check if any legacy question type mismatches exist (e.g. Q644 as NAT)
+            sample_legacy = db.query(Question).filter(Question.id == 644, Question.question_type == 'NAT').first()
+            if sample_legacy:
+                print("[Startup] Detected legacy question types. Syncing corrected questions from seed...")
+                seed_file = os.path.join(os.path.dirname(__file__), "seed_data", "questions_full_693.json")
+                if os.path.exists(seed_file):
+                    with open(seed_file, "r", encoding="utf-8") as f:
+                        q_list = json.load(f)
+                    for q in q_list:
+                        db.query(Question).filter(Question.id == q.get("id")).update({
+                            Question.question_type: q.get("question_type"),
+                            Question.options: json.dumps(q.get("options")) if q.get("options") else None,
+                            Question.correct_answer: q.get("correct_answer"),
+                            Question.nat_tolerance: q.get("nat_tolerance", 0.0),
+                            Question.explanation: q.get("explanation")
+                        })
+                    db.commit()
+                    print("[Startup] Successfully synced all updated question types and options!")
+            else:
+                print(f"[Startup] Database verified with {count} questions.")
     except Exception as e:
         print(f"[Startup] Error checking/seeding database: {e}")
     finally:

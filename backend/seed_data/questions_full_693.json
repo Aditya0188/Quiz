@@ -3282,14 +3282,19 @@
     "topic": "Machine Instructions & Addressing Modes",
     "year": 2008,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2008 (COA - Machine Instructions & Addressing Modes):\nConsider a 16-bit processor where base register $R1$ contains `0x2000` and index register $R2$ contains `0x0040`. What is the effective address in Base-Indexed addressing mode with displacement `0x0010`?",
-    "options": null,
-    "correct_answer": "0x2050",
+    "options": {
+      "A": "0x2050",
+      "B": "0x2040",
+      "C": "0x2010",
+      "D": "0x2030"
+    },
+    "correct_answer": "A",
     "nat_tolerance": 0.0,
-    "explanation": "**Calculation:** $\\text{EA} = [R1] + [R2] + \\text{Disp} = 0x2000 + 0x0040 + 0x0010 = 0x2050$.\n**Answer:** 0x2050.",
+    "explanation": "**Calculation:** $\\text{EA} = [R1] + [R2] + \\text{Disp} = 0x2000 + 0x0040 + 0x0010 = 0x2050$.\n**Answer:** A (0x2050).",
     "is_pyq": true
   },
   {
@@ -3425,14 +3430,19 @@
     "topic": "ALU & Control Unit",
     "year": 2016,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2016 (COA - ALU & Control Unit):\nIn IEEE-754 single-precision 32-bit floating point format, how many bits are allocated to the exponent and mantissa (fraction) fields respectively?",
-    "options": null,
-    "correct_answer": "8 and 23",
+    "options": {
+      "A": "8 and 23",
+      "B": "11 and 52",
+      "C": "7 and 24",
+      "D": "8 and 24"
+    },
+    "correct_answer": "A",
     "nat_tolerance": 0.0,
-    "explanation": "**Format:** Sign = 1 bit, Exponent = 8 bits (bias 127), Fraction = 23 bits. Total = 32 bits.\n**Answer:** 8 and 23.",
+    "explanation": "**Format:** Sign = 1 bit, Exponent = 8 bits (bias 127), Fraction = 23 bits. Total = 32 bits.\n**Answer:** A (8 and 23).",
     "is_pyq": true
   },
   {
@@ -4098,14 +4108,19 @@
     "topic": "C Programming & Pointers",
     "year": 2019,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2019 (Programming & DS - C Programming & Pointers):\nWhat is the output of the following C code?\n```c\nint a = 10, b = 20;\nint *p = &a, *q = &b;\n*p = *q;\nprintf(\"%d %d\", a, b);\n```",
-    "options": null,
-    "correct_answer": "20 20",
+    "options": {
+      "A": "10 20",
+      "B": "20 20",
+      "C": "20 10",
+      "D": "10 10"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Trace:** `*p = *q` assigns value of `b` (20) into `a`. Both variables now hold 20.\n**Answer:** 20 20.",
+    "explanation": "**Trace:** `*p = *q` assigns value of `b` (20) into `a`. Both variables now hold 20.\n**Answer:** B (20 20).",
     "is_pyq": true
   },
   {
@@ -4410,14 +4425,19 @@
     "topic": "Finite Automata & Regular Languages",
     "year": 2001,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2001 (TOC - Finite Automata & Regular Languages):\nFor an NFA with $n$ states, what is the maximum number of states in the equivalent minimal DFA in the worst case?",
-    "options": null,
-    "correct_answer": "2^n",
+    "options": {
+      "A": "$n$",
+      "B": "$n^2$",
+      "C": "$2^n$",
+      "D": "$2^{n-1}$"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Theorem:** Subset construction produces up to $2^n$ distinct state subsets in the power set.\n**Answer:** $2^n$.",
+    "explanation": "**Theorem:** Subset construction produces up to $2^n$ distinct state subsets in the power set in the worst case.\n**Answer:** C ($2^n$).",
     "is_pyq": true
   },
   {
@@ -4484,14 +4504,19 @@
     "topic": "Turing Machines & Undecidability",
     "year": 2005,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "hard",
     "marks": 2,
     "question_text": "GATE 2005 (TOC - Turing Machines & Undecidability):\nA Linear Bounded Automaton (LBA) accepts which language class in the Chomsky hierarchy?",
-    "options": null,
-    "correct_answer": "Context-Sensitive",
+    "options": {
+      "A": "Regular Languages",
+      "B": "Context-Free Languages",
+      "C": "Context-Sensitive Languages",
+      "D": "Recursively Enumerable Languages"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Chomsky Hierarchy:** Type 1 (Context-Sensitive Languages) is characterized by Linear Bounded Automata.\n**Answer:** Context-Sensitive.",
+    "explanation": "**Chomsky Hierarchy:** Type 1 (Context-Sensitive Languages) is characterized by Linear Bounded Automata.\n**Answer:** C (Context-Sensitive Languages).",
     "is_pyq": true
   },
   {
@@ -4611,14 +4636,19 @@
     "topic": "Turing Machines & Undecidability",
     "year": 2012,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "hard",
     "marks": 2,
     "question_text": "GATE 2012 (TOC - Turing Machines & Undecidability):\nLet $L_1$ be recursive and $L_2$ be recursively enumerable but not recursive. Is $L_1 \\cap L_2$ guaranteed to be recursively enumerable?",
-    "options": null,
-    "correct_answer": "Yes",
+    "options": {
+      "A": "Always recursively enumerable",
+      "B": "Never recursively enumerable",
+      "C": "Guaranteed to be regular",
+      "D": "Guaranteed to be context-free"
+    },
+    "correct_answer": "A",
     "nat_tolerance": 0.0,
-    "explanation": "**Theorem:** The intersection of a recursive language and an RE language is always recursively enumerable.\n**Answer:** Yes.",
+    "explanation": "**Theorem:** The intersection of a recursive language and an RE language is always recursively enumerable.\n**Answer:** A (Always recursively enumerable).",
     "is_pyq": true
   },
   {
@@ -4886,14 +4916,19 @@
     "topic": "Parsing Techniques",
     "year": 1992,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 1992 (Compiler Design - Parsing Techniques):\nConsider grammar: $S \\to a S b \\mid c$. What is $\\text{FOLLOW}(S)$ assuming $\\$$ is the end-of-input marker?",
-    "options": null,
-    "correct_answer": "b, $",
+    "options": {
+      "A": "{$}",
+      "B": "{b}",
+      "C": "{b, $}",
+      "D": "{a, b, $}"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** Since $S$ is start symbol, $\\$ \\in \\text{FOLLOW}(S)$. From $S \\to a S b$, $b \\in \\text{FOLLOW}(S)$. Set is $\\{b, \\$\\}$.\n**Answer:** {b, $}.",
+    "explanation": "**Rule:** Since $S$ is start symbol, $\\$ \\in \\text{FOLLOW}(S)$. From $S \\to a S b$, $b \\in \\text{FOLLOW}(S)$. Set is $\\{b, \\$\\}$.\n**Answer:** C ({b, $}).",
     "is_pyq": true
   },
   {
@@ -5002,14 +5037,19 @@
     "topic": "Parsing Techniques",
     "year": 1998,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 1998 (Compiler Design - Parsing Techniques):\nGiven grammar $S \\to ( S ) \\mid \\epsilon$. What is $\\text{FIRST}(S)$?",
-    "options": null,
-    "correct_answer": "(, epsilon",
+    "options": {
+      "A": "{(}",
+      "B": "{)}",
+      "C": "{(, \\epsilon}",
+      "D": "{\\epsilon}"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Calculation:** Deriving $S \\to (S)$ gives $($; deriving $S \\to \\epsilon$ gives $\\epsilon$. $\\text{FIRST}(S) = \\{(, \\epsilon\\}$.\n**Answer:** {(, epsilon}.",
+    "explanation": "**Calculation:** Deriving $S \\to (S)$ gives $($; deriving $S \\to \\epsilon$ gives $\\epsilon$. $\\text{FIRST}(S) = \\{(, \\epsilon\\}$.\n**Answer:** C ({(, \\epsilon}).",
     "is_pyq": true
   },
   {
@@ -5076,14 +5116,19 @@
     "topic": "Parsing Techniques",
     "year": 2002,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2002 (Compiler Design - Parsing Techniques):\nIn an SLR(1) parsing table, a SHIFT-REDUCE conflict occurs when a state contains:",
-    "options": null,
-    "correct_answer": "Shift and Reduce",
+    "options": {
+      "A": "A shift item and a reduce item on the same terminal",
+      "B": "Two reduce items on the same terminal",
+      "C": "Two shift items on different terminals",
+      "D": "An accept action and an error state"
+    },
+    "correct_answer": "A",
     "nat_tolerance": 0.0,
-    "explanation": "**Definition:** An item $[A \\to \\alpha \\cdot a \\beta]$ demanding shift on terminal $a$ coincides with $[B \\to \\gamma \\cdot]$ where $a \\in \\text{FOLLOW}(B)$.\n**Answer:** Shift and Reduce.",
+    "explanation": "**Definition:** An item $[A \\to \\alpha \\cdot a \\beta]$ demanding shift on terminal $a$ coincides with $[B \\to \\gamma \\cdot]$ where $a \\in \\text{FOLLOW}(B)$.\n**Answer:** A.",
     "is_pyq": true
   },
   {
@@ -5113,14 +5158,19 @@
     "topic": "Runtime Environments",
     "year": 2004,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2004 (Compiler Design - Runtime Environments):\nIn activation records, the pointer pointing to the activation record of the CALLING procedure is known as the:",
-    "options": null,
-    "correct_answer": "Dynamic Link",
+    "options": {
+      "A": "Static Link",
+      "B": "Dynamic Link",
+      "C": "Frame Pointer",
+      "D": "Stack Pointer"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** Dynamic link (control link) points to the caller's frame; Static link (access link) points to the lexical parent.\n**Answer:** Dynamic Link.",
+    "explanation": "**Rule:** Dynamic link (control link) points to the caller's frame; Static link (access link) points to the lexical parent.\n**Answer:** B (Dynamic Link).",
     "is_pyq": true
   },
   {
@@ -5203,14 +5253,19 @@
     "topic": "Parsing Techniques",
     "year": 2009,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2009 (Compiler Design - Parsing Techniques):\nWhat is the maximum number of items that can be grouped into a single state during LALR(1) state merging from CLR(1)?",
-    "options": null,
-    "correct_answer": "Same as LR(0)",
+    "options": {
+      "A": "Strictly more than LR(0)",
+      "B": "Exactly the same as LR(0)",
+      "C": "Same as CLR(1)",
+      "D": "Strictly fewer than LR(0)"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** LALR(1) merges CLR(1) states having identical LR(0) cores, yielding exactly the same number of states as the LR(0) collection.\n**Answer:** Same as LR(0).",
+    "explanation": "**Rule:** LALR(1) merges CLR(1) states having identical LR(0) cores, yielding exactly the same number of states as the LR(0) collection.\n**Answer:** B (Exactly the same as LR(0)).",
     "is_pyq": true
   },
   {
@@ -5298,14 +5353,19 @@
     "topic": "Parsing Techniques",
     "year": 2014,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "hard",
     "marks": 2,
     "question_text": "GATE 2014 (Compiler Design - Parsing Techniques):\nGrammar: $S \\to a S b \\mid \\epsilon$. What is the entry $M[S, b]$ in the LL(1) parsing table?",
-    "options": null,
-    "correct_answer": "S -> epsilon",
+    "options": {
+      "A": "$S \\to a S b$",
+      "B": "$S \\to \\epsilon$",
+      "C": "Error (empty entry)",
+      "D": "Synch"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Trace:** $\\text{FOLLOW}(S) = \\{b, \\$\\}$. Since $S \\to \\epsilon$, we place $S \\to \\epsilon$ in $M[S, t]$ for each $t \\in \\text{FOLLOW}(S)$, hence $M[S, b] = S \\to \\epsilon$.\n**Answer:** S -> epsilon.",
+    "explanation": "**Trace:** $\\text{FOLLOW}(S) = \\{b, \\$\\}$. Since $S \\to \\epsilon$, we place $S \\to \\epsilon$ in $M[S, t]$ for each $t \\in \\text{FOLLOW}(S)$, hence $M[S, b] = S \\to \\epsilon$.\n**Answer:** B ($S \\to \\epsilon$).",
     "is_pyq": true
   },
   {
@@ -5314,14 +5374,19 @@
     "topic": "Syntax-Directed Translation",
     "year": 2015,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2015 (Compiler Design - Syntax-Directed Translation):\nIn postfix SDD evaluation, when is a semantic action executed?",
-    "options": null,
-    "correct_answer": "On Reduction",
+    "options": {
+      "A": "During shift operations",
+      "B": "Immediately on production reduction",
+      "C": "Only at compiler termination",
+      "D": "During lexical analysis"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** Postfix actions are executed synchronously whenever the corresponding production is reduced on the parser stack.\n**Answer:** On Reduction.",
+    "explanation": "**Rule:** Postfix actions are executed synchronously whenever the corresponding production is reduced on the parser stack.\n**Answer:** B (Immediately on production reduction).",
     "is_pyq": true
   },
   {
@@ -5372,14 +5437,19 @@
     "topic": "Runtime Environments",
     "year": 2018,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2018 (Compiler Design - Runtime Environments):\nIn C, dynamically allocated memory requested via `malloc()` is allocated from which region of the process address space?",
-    "options": null,
-    "correct_answer": "Heap",
+    "options": {
+      "A": "Stack",
+      "B": "Data Segment (BSS)",
+      "C": "Heap",
+      "D": "Code Segment"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Concept:** The runtime Heap accommodates dynamic allocations managed explicitly by the programmer via `malloc`/`free`.\n**Answer:** Heap.",
+    "explanation": "**Concept:** The runtime Heap accommodates dynamic allocations managed explicitly by the programmer via `malloc`/`free`.\n**Answer:** C (Heap).",
     "is_pyq": true
   },
   {
@@ -5647,14 +5717,19 @@
     "topic": "Transactions & Concurrency Control",
     "year": 1998,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 1998 (DBMS - Transactions & Concurrency Control):\nIn Conflict Serializability, what graph data structure is inspected for the absence of cycles to determine if a schedule is serializable?",
-    "options": null,
-    "correct_answer": "Precedence Graph",
+    "options": {
+      "A": "Wait-For Graph",
+      "B": "Precedence Graph (Serialization Graph)",
+      "C": "Dependency Graph",
+      "D": "Tree Graph"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Theorem:** A schedule is conflict serializable if and only if its Precedence (Serialization) Graph is acyclic.\n**Answer:** Precedence Graph.",
+    "explanation": "**Theorem:** A schedule is conflict serializable if and only if its Precedence (Serialization) Graph is acyclic.\n**Answer:** B (Precedence Graph).",
     "is_pyq": true
   },
   {
@@ -5700,14 +5775,19 @@
     "topic": "Normalization & Functional Dependencies",
     "year": 2001,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2001 (DBMS - Normalization & Functional Dependencies):\nRelation $R(A, B, C)$ with $FD = \\{A \\to B, B \\to C\\}$. Candidate key is $A$. In which highest normal form is $R$?",
-    "options": null,
-    "correct_answer": "2NF",
+    "options": {
+      "A": "1NF",
+      "B": "2NF",
+      "C": "3NF",
+      "D": "BCNF"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Analysis:** $A \\to B$ and $B \\to C$ implies transitive dependency $A \\to C$ where $C$ is non-prime. Hence it violates 3NF, but satisfies 2NF.\n**Answer:** 2NF.",
+    "explanation": "**Analysis:** Transitive dependency $A \\to C$ exists where $C$ is non-prime. Violates 3NF, but satisfies 2NF.\n**Answer:** B (2NF).",
     "is_pyq": true
   },
   {
@@ -6049,14 +6129,19 @@
     "topic": "Indexing & B/B+ Trees",
     "year": 2020,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2020 (DBMS - Indexing & B/B+ Trees):\nA dense index has one index entry for:",
-    "options": null,
-    "correct_answer": "Every search key value",
+    "options": {
+      "A": "Every search key value",
+      "B": "Only the first search key of each disk block",
+      "C": "Only primary key attributes",
+      "D": "Only unique clustered indices"
+    },
+    "correct_answer": "A",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** A dense index stores an entry for every distinct search key value in the data file (sparse index only for first record of each block).\n**Answer:** Every search key value.",
+    "explanation": "**Rule:** A dense index stores an entry for every distinct search key value in the data file.\n**Answer:** A (Every search key value).",
     "is_pyq": true
   },
   {
@@ -6065,14 +6150,19 @@
     "topic": "Normalization & Functional Dependencies",
     "year": 2021,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2021 (DBMS - Normalization & Functional Dependencies):\nRelation $R(A, B, C, D)$ has $FD = \\{A \\to B, B \\to C, C \\to A, A \\to D\\}$. What is the candidate key?",
-    "options": null,
-    "correct_answer": "A, B, C",
+    "options": {
+      "A": "Only {A}",
+      "B": "{A}, {B}, and {C}",
+      "C": "{A, B} and {C, D}",
+      "D": "Only {A, D}"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Calculation:** $A^+ = B^+ = C^+ = \\{A, B, C, D\\}$. Candidates are each of $A, B, C$.\n**Answer:** A, B, C.",
+    "explanation": "**Calculation:** $A^+ = B^+ = C^+ = \\{A, B, C, D\\}$. Candidates are each of {A}, {B}, {C}.\n**Answer:** B ({A}, {B}, and {C}).",
     "is_pyq": true
   },
   {
@@ -6139,14 +6229,19 @@
     "topic": "Indexing & B/B+ Trees",
     "year": 2025,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2025 (DBMS - Indexing & B/B+ Trees):\nIn a B+ tree, leaf nodes are linked together via pointers to support efficient execution of which type of query?",
-    "options": null,
-    "correct_answer": "Range Queries",
+    "options": {
+      "A": "Exact point lookups",
+      "B": "Range Queries",
+      "C": "Hash lookups",
+      "D": "Full table drops"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** Leaf nodes are connected as a doubly/singly linked list, enabling fast sequential range scans ($O(k)$ for $k$ matching records).\n**Answer:** Range Queries.",
+    "explanation": "**Rule:** Leaf nodes are connected as a linked list, enabling fast sequential range scans.\n**Answer:** B (Range Queries).",
     "is_pyq": true
   },
   {
@@ -6192,14 +6287,19 @@
     "topic": "Network Layer & IPv4/IPv6",
     "year": 1993,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 1993 (Computer Networks - Network Layer & IPv4/IPv6):\nAn IP router receives a packet with destination address `192.168.1.135`. The routing table has entry `192.168.1.128/26`. Does the destination match this prefix?",
-    "options": null,
-    "correct_answer": "Yes",
+    "options": {
+      "A": "Yes, it matches prefix 192.168.1.128/26",
+      "B": "No, because the IP exceeds 192.168.1.128",
+      "C": "No, because host bits must be zero",
+      "D": "Yes, but only for broadcast traffic"
+    },
+    "correct_answer": "A",
     "nat_tolerance": 0.0,
-    "explanation": "**Calculation:** Mask `/26` covers addresses `192.168.1.128` through `192.168.1.191`. Since 135 falls within this range, it matches.\n**Answer:** Yes.",
+    "explanation": "**Calculation:** Mask `/26` covers addresses `192.168.1.128` through `192.168.1.191`. Since 135 falls within this range, it matches.\n**Answer:** A.",
     "is_pyq": true
   },
   {
@@ -6393,14 +6493,19 @@
     "topic": "Transport Layer & TCP/UDP",
     "year": 2004,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2004 (Computer Networks - Transport Layer & TCP/UDP):\nA TCP sender has `ssthresh = 32 KB`. When `cwnd` reaches 32 KB during slow start, what congestion control phase does it enter?",
-    "options": null,
-    "correct_answer": "Congestion Avoidance",
+    "options": {
+      "A": "Slow Start",
+      "B": "Fast Retransmit",
+      "C": "Congestion Avoidance",
+      "D": "Fast Recovery"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** When cwnd reaches ssthresh, TCP switches from exponential Slow Start to linear Congestion Avoidance.\n**Answer:** Congestion Avoidance.",
+    "explanation": "**Rule:** When cwnd reaches ssthresh, TCP switches from exponential Slow Start to linear Congestion Avoidance.\n**Answer:** C (Congestion Avoidance).",
     "is_pyq": true
   },
   {
@@ -6684,14 +6789,19 @@
     "topic": "Network Layer & IPv4/IPv6",
     "year": 2020,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2020 (Computer Networks - Network Layer & IPv4/IPv6):\nA router has routing table prefix `10.1.0.0/16` and `10.1.128.0/24`. A packet destined to `10.1.128.5` arrives. By Longest Prefix Match, which prefix is chosen?",
-    "options": null,
-    "correct_answer": "10.1.128.0/24",
+    "options": {
+      "A": "10.1.0.0/16",
+      "B": "10.1.128.0/24",
+      "C": "0.0.0.0/0",
+      "D": "Dropped due to ambiguity"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** Longest prefix match selects the matching route with the longest prefix length (24 bits > 16 bits).\n**Answer:** 10.1.128.0/24.",
+    "explanation": "**Rule:** Longest prefix match selects the matching route with the longest prefix length (24 bits > 16 bits).\n**Answer:** B (10.1.128.0/24).",
     "is_pyq": true
   },
   {
@@ -6774,14 +6884,19 @@
     "topic": "Routing Algorithms",
     "year": 2025,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2025 (Computer Networks - Routing Algorithms):\nBorder Gateway Protocol (BGP) operates between autonomous systems as which type of routing protocol?",
-    "options": null,
-    "correct_answer": "Path Vector",
+    "options": {
+      "A": "Distance Vector",
+      "B": "Link State",
+      "C": "Path Vector",
+      "D": "Flooding"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** BGP is an exterior Path Vector routing protocol advertising complete AS paths to avoid inter-domain loops.\n**Answer:** Path Vector.",
+    "explanation": "**Rule:** BGP is an exterior Path Vector routing protocol advertising complete AS paths to avoid inter-domain loops.\n**Answer:** C (Path Vector).",
     "is_pyq": true
   },
   {
@@ -6843,14 +6958,19 @@
     "topic": "Number Representations & Computer Arithmetic",
     "year": 1994,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 1994 (Digital Logic - Number Representations & Computer Arithmetic):\nWhat is the 8-bit 2's complement representation of the decimal integer $-18$ in hexadecimal?",
-    "options": null,
-    "correct_answer": "0xEE",
+    "options": {
+      "A": "0x12",
+      "B": "0xED",
+      "C": "0xEE",
+      "D": "0xFE"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Calculation:** $+18$ is `00010010`. Invert bits: `11101101`. Add 1: `11101110` = `0xEE`.\n**Answer:** 0xEE.",
+    "explanation": "**Calculation:** $+18$ is `00010010`. Invert bits: `11101101`. Add 1: `11101110` = `0xEE`.\n**Answer:** C (0xEE).",
     "is_pyq": true
   },
   {
@@ -6912,14 +7032,19 @@
     "topic": "Number Representations & Computer Arithmetic",
     "year": 1998,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 1998 (Digital Logic - Number Representations & Computer Arithmetic):\nIn an 8-bit 2's complement system, what is the range of representable signed integers $[Min, Max]$?",
-    "options": null,
-    "correct_answer": "[-128, 127]",
+    "options": {
+      "A": "[-127, 128]",
+      "B": "[-128, 127]",
+      "C": "[-128, 128]",
+      "D": "[-256, 255]"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Formula:** Range is $[-2^{n-1}, 2^{n-1} - 1] = [-2^7, 2^7 - 1] = [-128, 127]$.\n**Answer:** [-128, 127].",
+    "explanation": "**Formula:** Range is $[-2^{n-1}, 2^{n-1} - 1] = [-2^7, 2^7 - 1] = [-128, 127]$.\n**Answer:** B ([-128, 127]).",
     "is_pyq": true
   },
   {
@@ -7103,14 +7228,19 @@
     "topic": "Sequential Circuits",
     "year": 2009,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2009 (Digital Logic - Sequential Circuits):\nA D flip-flop has setup time $t_{setup} = 2$ ns and hold time $t_{hold} = 1$ ns. If clock period is 10 ns and clock edge is at $t=10$ ns, during which time window must input D remain stable?",
-    "options": null,
-    "correct_answer": "[8, 11] ns",
+    "options": {
+      "A": "[8, 10] ns",
+      "B": "[10, 11] ns",
+      "C": "[8, 11] ns",
+      "D": "[9, 12] ns"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Window:** $[T_{clk} - t_{setup}, T_{clk} + t_{hold}] = [10 - 2, 10 + 1] = [8, 11]$ ns.\n**Answer:** [8, 11] ns.",
+    "explanation": "**Window:** $[T_{clk} - t_{setup}, T_{clk} + t_{hold}] = [10 - 2, 10 + 1] = [8, 11]$ ns.\n**Answer:** C ([8, 11] ns).",
     "is_pyq": true
   },
   {
@@ -7278,14 +7408,19 @@
     "topic": "Boolean Algebra & K-Maps",
     "year": 2019,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2019 (Digital Logic - Boolean Algebra & K-Maps):\nWhat is the dual of $X \\oplus Y$?",
-    "options": null,
-    "correct_answer": "X XNOR Y",
+    "options": {
+      "A": "$X \\oplus Y$",
+      "B": "$X \\odot Y$ (XNOR)",
+      "C": "$X' + Y'$",
+      "D": "$X \\cdot Y$"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** Dual of $X Y' + X' Y$ is $(X + Y')(X' + Y) = X Y + X' Y' = X \\odot Y$ (XNOR).\n**Answer:** X XNOR Y.",
+    "explanation": "**Rule:** Dual of $X Y' + X' Y$ is $(X + Y')(X' + Y) = X Y + X' Y' = X \\odot Y$ (XNOR).\n**Answer:** B ($X \\odot Y$ (XNOR)).",
     "is_pyq": true
   },
   {
@@ -7294,14 +7429,19 @@
     "topic": "Combinational Circuits",
     "year": 2020,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2020 (Digital Logic - Combinational Circuits):\nA half-subtractor has inputs $A$ and $B$. What is the boolean expression for the Difference $D$?",
-    "options": null,
-    "correct_answer": "A XOR B",
+    "options": {
+      "A": "$A \\cdot B$",
+      "B": "$A' \\cdot B$",
+      "C": "$A \\oplus B$",
+      "D": "$A + B$"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Formula:** $D = A \\oplus B$ and $\\text{Borrow} = A' B$.\n**Answer:** A XOR B.",
+    "explanation": "**Formula:** $D = A \\oplus B$ and $\\text{Borrow} = A' B$.\n**Answer:** C ($A \\oplus B$).",
     "is_pyq": true
   },
   {
@@ -7655,14 +7795,19 @@
     "topic": "Linear Algebra",
     "year": 2006,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "hard",
     "marks": 2,
     "question_text": "GATE 2006 (Engineering Mathematics - Linear Algebra):\nIf matrix $A$ is orthogonal ($A^T A = I$), what are the only possible real values of $\\det(A)$?",
-    "options": null,
-    "correct_answer": "1 and -1",
+    "options": {
+      "A": "0 and 1",
+      "B": "1 and -1",
+      "C": "Only 1",
+      "D": "Any real number"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Proof:** $\\det(A^T A) = (\\det(A))^2 = \\det(I) = 1 \\implies \\det(A) = \\pm 1$.\n**Answer:** 1 and -1.",
+    "explanation": "**Proof:** $\\det(A^T A) = (\\det(A))^2 = \\det(I) = 1 \\implies \\det(A) = \\pm 1$.\n**Answer:** B (1 and -1).",
     "is_pyq": true
   },
   {
@@ -7937,14 +8082,19 @@
     "topic": "Linear Algebra",
     "year": 2023,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "hard",
     "marks": 2,
     "question_text": "GATE 2023 (Engineering Mathematics - Linear Algebra):\nMatrix $A = \\begin{bmatrix} 2 & 1 \\\\ 0 & 2 \\end{bmatrix}$. Is matrix $A$ diagonalizable over $\\mathbb{R}$?",
-    "options": null,
-    "correct_answer": "No",
+    "options": {
+      "A": "Yes, because it is upper triangular",
+      "B": "No, because geometric multiplicity of $\\lambda=2$ is strictly less than algebraic multiplicity",
+      "C": "Yes, because $\\det(A) \\neq 0$",
+      "D": "Yes, because eigenvalues are distinct"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Analysis:** Eigenvalue $\\lambda=2$ has algebraic multiplicity 2, but geometric multiplicity $\\dim(\\text{null}(A-2I)) = 1 < 2$. Hence not diagonalizable.\n**Answer:** No.",
+    "explanation": "**Analysis:** Eigenvalue $\\lambda=2$ has algebraic multiplicity 2, but geometric multiplicity $\\dim(\\text{null}(A-2I)) = 1 < 2$. Hence not diagonalizable.\n**Answer:** B.",
     "is_pyq": true
   },
   {
@@ -9581,14 +9731,19 @@
     "topic": "Network Layer & IPv4/IPv6",
     "year": 2024,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "An ISP allocates an organization the address block 200.10.0.0/22. The organization wants to create 4 equal-sized subnets. What is the subnet mask of these subnets in dotted-decimal format?",
-    "options": null,
-    "correct_answer": "255.255.255.0",
+    "options": {
+      "A": "255.255.252.0",
+      "B": "255.255.254.0",
+      "C": "255.255.255.0",
+      "D": "255.255.255.128"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Calculation:** Initial mask /22. To create 4 ($2^2$) subnets, borrow 2 bits: $22 + 2 = 24$ bits (/24).\nSubnet mask: 255.255.255.0.",
+    "explanation": "**Calculation:** Initial mask /22. To create 4 ($2^2$) subnets, borrow 2 bits: $22 + 2 = 24$ bits (/24).\nSubnet mask: 255.255.255.0.\n**Answer:** C (255.255.255.0).",
     "is_pyq": true
   },
   {
@@ -10862,14 +11017,19 @@
     "topic": "Syntax-Directed Translation",
     "year": 2026,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2026 (Q53, Compiler Design - Syntax-Directed Translation):\nConsider SDD with production $E \\to E_1 + T$ with action `E.val = E1.val + T.val`. If attribute `val` is evaluated bottom-up, what type of attribute is `val`?",
-    "options": null,
-    "correct_answer": "Synthesized",
+    "options": {
+      "A": "Inherited attribute",
+      "B": "Synthesized attribute",
+      "C": "Intrinsic attribute",
+      "D": "Dynamic attribute"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** An attribute computed exclusively from child node attributes is a Synthesized attribute.\n**Answer:** Synthesized.",
+    "explanation": "**Rule:** An attribute computed exclusively from child node attributes is a Synthesized attribute.\n**Answer:** B (Synthesized attribute).",
     "is_pyq": true
   },
   {
@@ -11043,14 +11203,19 @@
     "topic": "Network Layer & IPv4/IPv6",
     "year": 2026,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "hard",
     "marks": 2,
     "question_text": "GATE 2026 (Q64, Computer Networks - Network Layer & IPv4/IPv6):\nAn organization is allocated block `200.10.0.0/16`. It needs to create 128 subnets of equal size. What is the prefix length (CIDR notation) of each subnet?",
-    "options": null,
-    "correct_answer": "/23",
+    "options": {
+      "A": "/21",
+      "B": "/22",
+      "C": "/23",
+      "D": "/24"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Calculation:** 128 subnets requires $\\log_2 128 = 7$ subnet bits. Prefix = $16 + 7 = 23$ (i.e. `/23`).\n**Answer:** /23.",
+    "explanation": "**Calculation:** 128 subnets requires $\\log_2 128 = 7$ subnet bits. Prefix = $16 + 7 = 23$ (i.e. `/23`).\n**Answer:** C (/23).",
     "is_pyq": true
   },
   {
@@ -11477,14 +11642,19 @@
     "topic": "Parsing Techniques",
     "year": 2025,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "easy",
     "marks": 1,
     "question_text": "GATE 2025 (Paper 1, Compiler Design - Parsing Techniques):\nIf grammar $S \\to a S \\mid b$ has production $S \\to b$, what terminal is in $\\text{FIRST}(S)$?",
-    "options": null,
-    "correct_answer": "a, b",
+    "options": {
+      "A": "{a}",
+      "B": "{b}",
+      "C": "{a, b}",
+      "D": "{a, b, \\epsilon}"
+    },
+    "correct_answer": "C",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** $\\text{FIRST}(S) = \\{a, b\\}$.\n**Answer:** a, b.",
+    "explanation": "**Rule:** $\\text{FIRST}(S) = \\{a, b\\}$.\n**Answer:** C ({a, b}).",
     "is_pyq": true
   },
   {
@@ -11673,14 +11843,19 @@
     "topic": "Analytical Aptitude",
     "year": 2025,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2025 (Paper 1, General Aptitude - Analytical Aptitude):\nPointing to a photograph, a man said: 'She is the daughter of my grandfather's only son.' How is the woman in the photograph related to the man?",
-    "options": null,
-    "correct_answer": "Sister",
+    "options": {
+      "A": "Sister",
+      "B": "Mother",
+      "C": "Aunt",
+      "D": "Daughter"
+    },
+    "correct_answer": "A",
     "nat_tolerance": 0.0,
-    "explanation": "**Relation:** Grandfather's only son is the man's father. Father's daughter is his Sister.\n**Answer:** Sister.",
+    "explanation": "**Relation:** Grandfather's only son is the man's father. Father's daughter is his Sister.\n**Answer:** A (Sister).",
     "is_pyq": true
   },
   {
@@ -11986,14 +12161,19 @@
     "topic": "Normalization & Functional Dependencies",
     "year": 2025,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2025 (Paper 1, DBMS - Normalization & Functional Dependencies):\nRelation $R(A, B, C)$ with $FD = \\{A \\to B, B \\to C\\}$. In which normal form is $R$?",
-    "options": null,
-    "correct_answer": "2NF",
+    "options": {
+      "A": "1NF",
+      "B": "2NF",
+      "C": "3NF",
+      "D": "BCNF"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Analysis:** Transitive dependency $A \\to C$ exists. Violates 3NF, but satisfies 2NF.\n**Answer:** 2NF.",
+    "explanation": "**Analysis:** Transitive dependency $A \\to C$ exists. Violates 3NF, but satisfies 2NF.\n**Answer:** B (2NF).",
     "is_pyq": true
   },
   {
@@ -12002,14 +12182,19 @@
     "topic": "Transactions & Concurrency Control",
     "year": 2025,
     "set_number": "Set 1",
-    "question_type": "NAT",
+    "question_type": "MCQ",
     "difficulty": "medium",
     "marks": 2,
     "question_text": "GATE 2025 (Paper 1, DBMS - Transactions & Concurrency Control):\nIn strict two-phase locking (Strict 2PL), when are exclusive (write) locks released?",
-    "options": null,
-    "correct_answer": "End of Transaction",
+    "options": {
+      "A": "Immediately after write operation",
+      "B": "At the end of transaction (Commit or Abort)",
+      "C": "When the lock point is reached",
+      "D": "When read locks are acquired"
+    },
+    "correct_answer": "B",
     "nat_tolerance": 0.0,
-    "explanation": "**Rule:** Strict 2PL holds all exclusive locks until transaction commit or abort.\n**Answer:** End of Transaction.",
+    "explanation": "**Rule:** Strict 2PL holds all exclusive locks until transaction commit or abort.\n**Answer:** B (At the end of transaction).",
     "is_pyq": true
   },
   {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import client from '../api/client';
+import { useAuth } from '../context/AuthContext';
 import { parseLaTeX, formatDate } from '../utils/helpers';
 import { 
   Users, User, Trophy, Target, Clock, TrendingUp, 
@@ -13,7 +14,12 @@ import {
 } from 'recharts';
 import toast from 'react-hot-toast';
 
+const ADMIN_EMAIL = 'likeaditya1234@gmail.com';
+
 const StudyBuddy = () => {
+  const { user: currentUser } = useAuth();
+  const isAdmin = (currentUser?.email || '').trim().toLowerCase() === ADMIN_EMAIL;
+
   const [loading, setLoading] = useState(true);
   const [peersList, setPeersList] = useState([]);
   const [selectedBuddyId, setSelectedBuddyId] = useState(null);
@@ -56,13 +62,17 @@ const StudyBuddy = () => {
   }, []);
 
   const handleDeletePeer = async (peerId) => {
+    if (!isAdmin) {
+      toast.error('Access Denied: Only administrator can delete accounts.');
+      return;
+    }
     const peer = peersList.find(p => p.id === peerId);
-    if (!window.confirm(`Are you sure you want to permanently delete test account "${peer?.name || 'User'}" and all their test data?`)) {
+    if (!window.confirm(`Are you sure you want to permanently delete account "${peer?.name || 'User'}" and all their test data?`)) {
       return;
     }
     try {
       await client.delete(`/peers/user/${peerId}`);
-      toast.success(`Removed test account: ${peer?.name}`);
+      toast.success(`Removed account: ${peer?.name}`);
       setSelectedBuddyId(null);
       await fetchData(false);
     } catch (err) {
@@ -170,10 +180,10 @@ const StudyBuddy = () => {
                   <option value="">No other peer registered yet</option>
                 )}
               </select>
-              {selectedBuddyId && (
+              {isAdmin && selectedBuddyId && (
                 <button
                   onClick={() => handleDeletePeer(selectedBuddyId)}
-                  title="Delete this test account"
+                  title="Delete this user account (Admin Only)"
                   className="px-2.5 py-2 rounded-xl bg-red-500/20 hover:bg-red-600 text-red-200 hover:text-white transition-all border border-red-400/30 text-xs font-bold flex items-center gap-1 cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />

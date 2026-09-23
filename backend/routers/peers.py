@@ -336,13 +336,22 @@ def get_peer_attempt_details(
     }
 
 
+ADMIN_EMAILS = {"likeaditya1234@gmail.com"}
+
 @router.delete("/user/{user_id}")
 def delete_peer_user(
     user_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Delete a test or unwanted peer account and their quiz sessions."""
+    """Delete a test or unwanted peer account and their quiz sessions (Admin only)."""
+    user_email = (current_user.email or "").strip().lower()
+    if user_email not in ADMIN_EMAILS:
+        raise HTTPException(
+            status_code=403, 
+            detail="Access Denied: Only administrator (likeaditya1234@gmail.com) has permission to delete user accounts."
+        )
+
     if user_id == current_user.id:
         raise HTTPException(status_code=400, detail="Cannot delete your own active account from here.")
 

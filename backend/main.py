@@ -107,6 +107,28 @@ def startup_db_check():
                 print(f"[Startup] Database verified with {total_now} total questions.")
         else:
             print(f"[Startup] Warning: Seed file not found at {seed_file}")
+
+        # Ensure CASCADE delete on PostgreSQL for quiz_sessions
+        if db.bind.dialect.name == "postgresql":
+            try:
+                from sqlalchemy import text
+                db.execute(text("""
+                    DO $$
+                    BEGIN
+                        IF EXISTS (
+                            SELECT 1 FROM pg_constraint WHERE conname = 'quiz_sessions_user_id_fkey'
+                        ) THEN
+                            ALTER TABLE quiz_sessions DROP CONSTRAINT quiz_sessions_user_id_fkey;
+                            ALTER TABLE quiz_sessions ADD CONSTRAINT quiz_sessions_user_id_fkey 
+                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+                        END IF;
+                    END $$;
+                """))
+                db.commit()
+                print("[Startup] PostgreSQL CASCADE delete constraint verified.")
+            except Exception as e:
+                db.rollback()
+                print(f"[Startup] Note on CASCADE constraint update: {e}")
     except Exception as e:
         print(f"[Startup] Error checking/seeding database: {e}")
     finally:

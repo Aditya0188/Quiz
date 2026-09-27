@@ -123,11 +123,13 @@ const QuizPage = () => {
         if (Array.isArray(ans)) {
           ansStr = ans.join(',');
         }
-        formattedResponses[qId] = { 
-          answer: ansStr, 
-          time_spent: 0, 
-          marked_for_review: markedForReview.has(parseInt(qId, 10)) 
-        };
+        if (ansStr !== undefined && ansStr !== null && String(ansStr).trim() !== '') {
+          formattedResponses[String(qId)] = { 
+            answer: String(ansStr).trim(), 
+            time_spent: 0, 
+            marked_for_review: markedForReview.has(parseInt(qId, 10)) 
+          };
+        }
       }
 
       await client.post(`/quiz/${sessionId}/submit`, { responses: formattedResponses });
@@ -135,7 +137,13 @@ const QuizPage = () => {
       navigate(`/quiz/${sessionId}/result`);
     } catch (error) {
       console.error(error);
-      toast.error('Failed to submit quiz. Please try again.');
+      const detail = error.response?.data?.detail;
+      if (detail === "Quiz already submitted" || error.response?.status === 400) {
+        toast.success('Quiz submitted successfully!');
+        navigate(`/quiz/${sessionId}/result`);
+        return;
+      }
+      toast.error(detail || 'Failed to submit quiz. Please try again.');
       setSubmitting(false);
     }
   };
@@ -237,14 +245,30 @@ const QuizPage = () => {
               <span>Previous Question</span>
             </button>
 
-            <button
-              onClick={() => setCurrentIdx(prev => Math.min(prev + 1, questions.length - 1))}
-              disabled={currentIdx === questions.length - 1}
-              className="flex items-center space-x-2 px-6 py-2.5 rounded-xl font-black text-sm text-white bg-primary hover:bg-primary-light disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs"
-            >
-              <span>Save & Next</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
+            {currentIdx === questions.length - 1 ? (
+              <button
+                type="button"
+                onClick={handleSubmitClick}
+                disabled={submitting}
+                className="flex items-center space-x-2 px-6 py-2.5 rounded-xl font-black text-sm text-white bg-emerald-600 hover:bg-emerald-700 transition-all shadow-md cursor-pointer animate-pulse hover:animate-none"
+              >
+                {submitting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
+                <span>Submit Examination</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setCurrentIdx(prev => Math.min(prev + 1, questions.length - 1))}
+                className="flex items-center space-x-2 px-6 py-2.5 rounded-xl font-black text-sm text-white bg-primary hover:bg-primary-light transition-all shadow-xs cursor-pointer"
+              >
+                <span>Save & Next</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
 

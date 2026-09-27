@@ -96,7 +96,15 @@ def submit_quiz(session_id: int, payload: SubmitAnswers, db: Session = Depends(g
         raise HTTPException(status_code=404, detail="Quiz session not found")
         
     if session.completed_at:
-        raise HTTPException(status_code=400, detail="Quiz already submitted")
+        return {
+            "session_id": session.id,
+            "score": session.score,
+            "max_score": session.max_score,
+            "correct_count": session.correct_count,
+            "wrong_count": session.wrong_count,
+            "unanswered_count": session.unanswered_count,
+            "completed_at": session.completed_at.isoformat() if session.completed_at else None
+        }
         
     evaluated = evaluate_quiz(db, session_id, payload.responses)
     

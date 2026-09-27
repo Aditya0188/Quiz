@@ -283,7 +283,8 @@ def evaluate_quiz(db: Session, session_id: int, responses: dict):
         return None
 
     questions_order = json.loads(session.questions_order)
-    questions = db.query(Question).filter(Question.id.in_(questions_order)).all()
+    q_ids_int = [int(x) for x in questions_order]
+    questions = db.query(Question).filter(Question.id.in_(q_ids_int)).all()
     q_dict = {q.id: q for q in questions}
 
     total_score = 0.0
@@ -301,7 +302,7 @@ def evaluate_quiz(db: Session, session_id: int, responses: dict):
             continue
 
         max_score += q.marks
-        user_resp = responses.get(str(q_id), {})
+        user_resp = responses.get(str(q_id)) or responses.get(q_id) or {}
         ans = user_resp.get("answer")
 
         evaluated_responses[str(q_id)] = {

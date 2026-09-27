@@ -6,7 +6,7 @@ class QuizSession(Base):
     __tablename__ = "quiz_sessions"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     config = Column(String, nullable=False) # JSON
     
     total_questions = Column(Integer, nullable=False)

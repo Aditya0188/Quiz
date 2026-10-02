@@ -280,14 +280,32 @@ def generate_quiz(db: Session, user_id: int, config: dict):
     if not eligible_pool:
         return []
 
-    # Group by (topic, first_tag, question_type) for FINE-GRAINED diversity.
-    # Using the first tag (e.g. "unit_conversion", "percentage", "pipelining_hazard")
-    # as a secondary key means questions sharing the same formula/concept land in
-    # the same bucket, and round-robin ensures at most 1 is picked per round.
+    # ── TEMPLATE-FINGERPRINT GROUPING ─────────────────────────────────────
+    # The key insight: questions like
+    #   "min DFA states for |w| ≥ 18"  and  "min DFA states for |w| ≥ 32"
+    # are the SAME template with different numbers. Tags/topics won't catch
+    # this. We detect it by:
+    #   1. Strip all digits / inline LaTeX math from question text
+    #   2. Lowercase + collapse whitespace
+    #   3. Take first 12 words as a "template fingerprint"
+    # Questions with the same fingerprint → same diversity bucket →
+    # round-robin picks at most max_per_group from each bucket.
+    import re
     from collections import defaultdict
 
+    def _template_fingerprint(q) -> str:
+        """Normalised template key: same formula + different numbers = same key."""
+        try:
+            text = q.question_text or ""
+            text = re.sub(r'\$[^$]*\$', ' NUM ', text)      # inline math → NUM
+            text = re.sub(r'\d+', '#', text)                 # strip digits
+            text = re.sub(r'[^a-z# ]+', ' ', text.lower())  # keep only words
+            text = re.sub(r'\s+', ' ', text).strip()
+            return ' '.join(text.split()[:12])               # first 12 words
+        except Exception:
+            return ""
+
     def _first_tag(q) -> str:
-        """Return the first tag from the JSON tags field, or empty string."""
         try:
             tags_raw = q.tags
             if not tags_raw:
@@ -301,13 +319,17 @@ def generate_quiz(db: Session, user_id: int, config: dict):
 
     diversity_groups: dict = defaultdict(list)
     for q in eligible_pool:
-        key = (q.topic or "unknown", _first_tag(q), q.question_type or "MCQ")
+        fingerprint = _template_fingerprint(q)
+        # Primary key = text template fingerprint (catches same-formula variants
+        # even when they differ in topic/tag/numbers)
+        # Fallback to topic if fingerprint is empty
+        key = (fingerprint or (q.topic or "unknown"), q.question_type or "MCQ")
         diversity_groups[key].append(q)
 
-    # Scale the per-concept cap with quiz size:
-    #   ≤10 questions  → max 1 per concept group  (strict, no repeats)
-    #   11-20 questions → max 2 per concept group  (light repetition OK)
-    #   21+  questions  → max 3 per concept group  (moderate repetition OK)
+    # Scale the per-template cap with quiz size:
+    #   <=10 questions  -> max 1 per template  (zero same-template repeats)
+    #   11-20 questions -> max 2 per template
+    #   21+  questions  -> max 3 per template
     if num_questions <= 10:
         max_per_group = 1
     elif num_questions <= 20:

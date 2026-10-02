@@ -4,8 +4,12 @@ from sqlalchemy.orm import sessionmaker
 from config import settings
 
 db_url = settings.DATABASE_URL
+# Normalize legacy postgres:// → postgresql://
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
+# Explicitly use psycopg2 driver to avoid psycopg3 import errors on Render
+if db_url.startswith("postgresql://") and "+psycopg" not in db_url:
+    db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
 engine = create_engine(
     db_url,

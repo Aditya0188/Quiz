@@ -8,3 +8,4 @@ google-generativeai
 pydantic
 pydantic-settings
 psycopg2-binary
+psycopg[binary]

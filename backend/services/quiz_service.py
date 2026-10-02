@@ -257,23 +257,105 @@ def generate_quiz(db: Session, user_id: int, config: dict):
     # Shuffle unseen pool for randomness
     random.shuffle(unseen_pool)
 
-    selected = []
-    if len(unseen_pool) >= num_questions:
-        # 100% completely brand-new, unseen questions! Zero repetition!
-        selected = unseen_pool[:num_questions]
+    # ---------------------------------------------------------------
+    # DIVERSITY-AWARE SELECTION
+    # Strategy:
+    #   1. Prefer unseen questions. If unseen pool is large enough,
+    #      we only work within unseen pool; otherwise we also use
+    #      least-recently-seen questions.
+    #   2. Group the eligible pool by (topic, question_type) "slots"
+    #      so that no single topic + type combo dominates.
+    #   3. Do a round-robin pick across slot groups until we have
+    #      enough questions.
+    # ---------------------------------------------------------------
+
+    # Build the combined eligible pool (unseen first, then least-recently-seen)
+    seen_order_map = {qid: idx for idx, qid in enumerate(seen_q_ids_ordered)}
+    seen_pool_sorted = sorted(seen_pool, key=lambda q: seen_order_map.get(q.id, 999999), reverse=True)
+
+    # Combine: first all unseen (shuffled), then seen sorted by staleness
+    random.shuffle(unseen_pool)
+    eligible_pool = unseen_pool + seen_pool_sorted
+
+    if not eligible_pool:
+        return []
+
+    # Group by (topic, first_tag, question_type) for FINE-GRAINED diversity.
+    # Using the first tag (e.g. "unit_conversion", "percentage", "pipelining_hazard")
+    # as a secondary key means questions sharing the same formula/concept land in
+    # the same bucket, and round-robin ensures at most 1 is picked per round.
+    from collections import defaultdict
+
+    def _first_tag(q) -> str:
+        """Return the first tag from the JSON tags field, or empty string."""
+        try:
+            tags_raw = q.tags
+            if not tags_raw:
+                return ""
+            tags_list = json.loads(tags_raw) if isinstance(tags_raw, str) else tags_raw
+            if isinstance(tags_list, list) and tags_list:
+                return str(tags_list[0]).strip().lower()
+        except Exception:
+            pass
+        return ""
+
+    diversity_groups: dict = defaultdict(list)
+    for q in eligible_pool:
+        key = (q.topic or "unknown", _first_tag(q), q.question_type or "MCQ")
+        diversity_groups[key].append(q)
+
+    # Scale the per-concept cap with quiz size:
+    #   ≤10 questions  → max 1 per concept group  (strict, no repeats)
+    #   11-20 questions → max 2 per concept group  (light repetition OK)
+    #   21+  questions  → max 3 per concept group  (moderate repetition OK)
+    if num_questions <= 10:
+        max_per_group = 1
+    elif num_questions <= 20:
+        max_per_group = 2
     else:
-        # Take all remaining unseen questions first
-        selected = list(unseen_pool)
-        needed = num_questions - len(selected)
+        max_per_group = 3
 
-        # For remaining slots, pick from seen_pool sorted by LEAST RECENTLY SEEN
-        # Higher index in seen_q_ids_ordered means seen longer ago
-        seen_order_map = {qid: idx for idx, qid in enumerate(seen_q_ids_ordered)}
-        seen_pool.sort(key=lambda q: seen_order_map.get(q.id, 999999), reverse=True)
+    group_keys = list(diversity_groups.keys())
+    random.shuffle(group_keys)  # randomize group order so no group is always first
 
-        selected.extend(seen_pool[:needed])
+    # Track how many times each group has contributed
+    group_pick_count: dict = defaultdict(int)
 
-    # Final shuffle
+    selected = []
+    seen_ids_in_selected = set()
+
+    # Round-robin: each round picks 1 from each group (if not yet at cap)
+    max_rounds = num_questions  # upper bound on iterations
+    for _round in range(max_rounds):
+        if len(selected) >= num_questions:
+            break
+        made_progress = False
+        for key in group_keys:
+            if len(selected) >= num_questions:
+                break
+            if group_pick_count[key] >= max_per_group:
+                continue  # this concept already contributed enough
+            pool_for_key = diversity_groups[key]
+            for q in pool_for_key:
+                if q.id not in seen_ids_in_selected:
+                    selected.append(q)
+                    seen_ids_in_selected.add(q.id)
+                    group_pick_count[key] += 1
+                    made_progress = True
+                    break
+        if not made_progress:
+            break  # all groups exhausted or at cap — stop early
+
+    # Fallback: if we still need more questions, relax the cap and fill from eligible_pool
+    if len(selected) < num_questions:
+        for q in eligible_pool:
+            if len(selected) >= num_questions:
+                break
+            if q.id not in seen_ids_in_selected:
+                selected.append(q)
+                seen_ids_in_selected.add(q.id)
+
+    # Final shuffle so the question ORDER within the quiz is random
     random.shuffle(selected)
     return selected
 
